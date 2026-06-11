@@ -7,7 +7,7 @@ class Home extends StatefulWidget {
 
   final String title;
 
-  static const movieList = [
+  static final List<Map<String, dynamic>> movieList = [
     {
       'title': 'Avatar: The Way of Water',
       'overview':
@@ -16,6 +16,7 @@ class Home extends StatefulWidget {
       'rating': '7.6',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_SY278_CR5,0,184,278_.jpg',
+      'isFavorite': false,
     },
     {
       'title': 'Interstellar',
@@ -25,6 +26,7 @@ class Home extends StatefulWidget {
       'rating': '8.7',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SY278_CR2,0,184,278_.jpg',
+      'isFavorite': false,
     },
     {
       'title': 'Top Gun: Maverick',
@@ -34,6 +36,7 @@ class Home extends StatefulWidget {
       'rating': '8.3',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BMDBkZDNjMWEtOTdmMi00NmExLTg5MmMtNTFlYTJlNWY5YTdmXkEyXkFqcGc@._V1_SY139_CR1,0,92,139_.jpg',
+      'isFavorite': false,
     },
     {
       'title': 'The Batman',
@@ -43,6 +46,7 @@ class Home extends StatefulWidget {
       'rating': '7.8',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SY278_CR2,0,184,278_.jpg',
+      'isFavorite': false,
     },
     {
       'title': 'Dune: Part Two',
@@ -52,6 +56,7 @@ class Home extends StatefulWidget {
       'rating': '8.6',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_SY278_CR2,0,184,278_.jpg',
+      'isFavorite': false,
     },
     {
       'title': 'Inception',
@@ -61,6 +66,7 @@ class Home extends StatefulWidget {
       'rating': '8.8',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SY278_CR2,0,184,278_.jpg',
+      'isFavorite': false,
     },
     {
       'title': 'Spider-Man: Into the Spider-Verse',
@@ -70,6 +76,7 @@ class Home extends StatefulWidget {
       'rating': '8.4',
       'imageUrl':
           'https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SY278_CR1,0,184,278_.jpg',
+      'isFavorite': false,
     },
   ];
 
@@ -78,6 +85,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool isFavorite = false;
+
+  void toggleFavorite(int index) {
+    setState(() {
+      Home.movieList[index]['isFavorite'] =
+          !(Home.movieList[index]['isFavorite'] as bool? ?? false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,21 +113,25 @@ class _HomeState extends State<Home> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => MovieDetail(
-                      title: movie['title'] ?? 'Unknown',
-                      overview: movie['overview'] ?? 'No overview available',
-                      releaseDate: movie['releaseDate'] ?? 'Unknown',
-                      rating: movie['rating'] ?? 'Unknown',
-                      imageUrl: movie['imageUrl'] ?? '',
+                      title: movie['title'].toString(),
+                      overview: movie['overview'].toString(),
+                      releaseDate: movie['releaseDate'].toString(),
+                      rating: movie['rating'].toString(),
+                      imageUrl: movie['imageUrl'].toString(),
+                      isFavorite: movie['isFavorite'] as bool? ?? false,
+                      onFavoriteToggle: () => toggleFavorite(index),
                     ),
                   ),
                 );
               },
               child: MovieCard(
-                title: movie['title'] ?? 'Unknown',
-                overview: movie['overview'] ?? 'No overview available',
-                releaseDate: movie['releaseDate'] ?? 'Unknown',
-                rating: movie['rating'] ?? 'Unknown',
-                imageUrl: movie['imageUrl'] ?? '',
+                title: movie['title'].toString(),
+                overview: movie['overview'].toString(),
+                releaseDate: movie['releaseDate'].toString(),
+                rating: movie['rating'].toString(),
+                imageUrl: movie['imageUrl'].toString(),
+                isFavorite: movie['isFavorite'] as bool? ?? false,
+                onFavoriteToggle: () => toggleFavorite(index),
               ),
             );
           },

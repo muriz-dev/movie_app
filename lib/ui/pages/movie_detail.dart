@@ -6,6 +6,8 @@ class MovieDetail extends StatelessWidget {
   final String releaseDate;
   final String rating;
   final String imageUrl;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteToggle;
 
   const MovieDetail({
     super.key,
@@ -14,6 +16,8 @@ class MovieDetail extends StatelessWidget {
     required this.releaseDate,
     required this.rating,
     required this.imageUrl,
+    required this.isFavorite,
+    this.onFavoriteToggle,
   });
 
   @override
@@ -86,7 +90,19 @@ class MovieDetail extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Add your favorite button logic here
+                    if (onFavoriteToggle != null) {
+                      onFavoriteToggle!();
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            isFavorite
+                                ? 'Removed from Favorites'
+                                : 'Added to Favorites',
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: const Text('Add to Favorites'),
                 ),

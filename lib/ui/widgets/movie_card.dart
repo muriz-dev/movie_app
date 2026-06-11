@@ -6,6 +6,8 @@ class MovieCard extends StatelessWidget {
   final String releaseDate;
   final String rating;
   final String imageUrl;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteToggle;
 
   const MovieCard({
     super.key,
@@ -14,6 +16,8 @@ class MovieCard extends StatelessWidget {
     required this.releaseDate,
     required this.rating,
     required this.imageUrl,
+    required this.isFavorite,
+    this.onFavoriteToggle,
   });
 
   @override
@@ -96,9 +100,31 @@ class MovieCard extends StatelessWidget {
               ),
             ),
 
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
 
-            Icon(Icons.favorite_border, size: 32, color: Colors.grey),
+            GestureDetector(
+              onTap: () {
+                if (onFavoriteToggle != null) {
+                  onFavoriteToggle!();
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      isFavorite
+                          ? 'Removed from favorites'
+                          : 'Added to favorites',
+                    ),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+              child: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                size: 32,
+                color: isFavorite ? Colors.red : Colors.grey,
+              ),
+            ),
           ],
         ),
       ),
