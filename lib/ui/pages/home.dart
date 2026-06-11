@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/movie_card.dart';
+import 'movie_detail.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -92,32 +93,17 @@ class _HomeState extends State<Home> {
             final movie = Home.movieList[index];
             return GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text(movie['title'] ?? 'Unknown'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Release Date: ${movie['releaseDate'] ?? 'Unknown'}',
-                          ),
-                          const SizedBox(height: 8),
-                          Text('Rating: ${movie['rating'] ?? 'Unknown'}'),
-                          const SizedBox(height: 16),
-                          Text(movie['overview'] ?? 'No overview available'),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Close'),
-                        ),
-                      ],
-                    );
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MovieDetail(
+                      title: movie['title'] ?? 'Unknown',
+                      overview: movie['overview'] ?? 'No overview available',
+                      releaseDate: movie['releaseDate'] ?? 'Unknown',
+                      rating: movie['rating'] ?? 'Unknown',
+                      imageUrl: movie['imageUrl'] ?? '',
+                    ),
+                  ),
                 );
               },
               child: MovieCard(
