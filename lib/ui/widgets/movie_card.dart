@@ -95,6 +95,10 @@ class MovieCard extends StatelessWidget {
                 ],
               ),
             ),
+
+            SizedBox(width: 8),
+
+            Icon(Icons.favorite_border, size: 32, color: Colors.grey),
           ],
         ),
       ),
