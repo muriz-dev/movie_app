@@ -1,132 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/movie_list_bloc.dart';
 import '../widgets/movie_card.dart';
 import 'movie_detail.dart';
 
-class MovieList extends StatefulWidget {
+class MovieList extends StatelessWidget {
   const MovieList({super.key});
-
-  static final List<Map<String, dynamic>> movieList = [
-    {
-      'title': 'Avatar: The Way of Water',
-      'overview':
-          'Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na\'vi race to protect their home.',
-      'releaseDate': '2022',
-      'rating': '7.6',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_SY278_CR5,0,184,278_.jpg',
-      'isFavorite': false,
-    },
-    {
-      'title': 'Interstellar',
-      'overview':
-          'In a dystopian future where Earth has become near-uninhabitable, a team of astronauts embark on a mission to find a new home for humanity.',
-      'releaseDate': '2014',
-      'rating': '8.7',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SY278_CR2,0,184,278_.jpg',
-      'isFavorite': false,
-    },
-    {
-      'title': 'Top Gun: Maverick',
-      'overview':
-          'The story involves Maverick confronting his past while training a group of younger Top Gun graduates, including the son of his deceased best friend, for a dangerous mission.',
-      'releaseDate': '2022',
-      'rating': '8.3',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BMDBkZDNjMWEtOTdmMi00NmExLTg5MmMtNTFlYTJlNWY5YTdmXkEyXkFqcGc@._V1_SY139_CR1,0,92,139_.jpg',
-      'isFavorite': false,
-    },
-    {
-      'title': 'The Batman',
-      'overview':
-          'When a sadistic serial killer begins murdering key political figures in Gotham, the Batman is forced to investigate the city\'s hidden corruption and question his family\'s involvement.',
-      'releaseDate': '2022',
-      'rating': '7.8',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SY278_CR2,0,184,278_.jpg',
-      'isFavorite': false,
-    },
-    {
-      'title': 'Dune: Part Two',
-      'overview':
-          'Paul Atreides unites with the Fremen while on a warpath of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the universe, he endeavors to prevent a terrible future.',
-      'releaseDate': '2024',
-      'rating': '8.6',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_SY278_CR2,0,184,278_.jpg',
-      'isFavorite': false,
-    },
-    {
-      'title': 'Inception',
-      'overview':
-          'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO, but his tragic past may doom the project and his team to disaster.',
-      'releaseDate': '2010',
-      'rating': '8.8',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SY278_CR2,0,184,278_.jpg',
-      'isFavorite': false,
-    },
-    {
-      'title': 'Spider-Man: Into the Spider-Verse',
-      'overview':
-          'Teen Miles Morales becomes the Spider-Man of his universe and must join with five spider-powered individuals from other dimensions to stop a threat for all realities.',
-      'releaseDate': '2018',
-      'rating': '8.4',
-      'imageUrl':
-          'https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SY278_CR1,0,184,278_.jpg',
-      'isFavorite': false,
-    },
-  ];
-
-  @override
-  State<MovieList> createState() => _MovieListState();
-}
-
-class _MovieListState extends State<MovieList> {
-  void toggleFavorite(int index) {
-    setState(() {
-      MovieList.movieList[index]['isFavorite'] =
-          !(MovieList.movieList[index]['isFavorite'] as bool? ?? false);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemCount: MovieList.movieList.length,
-        itemBuilder: (context, index) {
-          final movie = MovieList.movieList[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MovieDetail(
-                    title: movie['title'].toString(),
-                    overview: movie['overview'].toString(),
-                    releaseDate: movie['releaseDate'].toString(),
-                    rating: movie['rating'].toString(),
-                    imageUrl: movie['imageUrl'].toString(),
-                    isFavorite: movie['isFavorite'] as bool? ?? false,
-                    onFavoriteToggle: () => toggleFavorite(index),
+    return BlocBuilder<MovieListBloc, MovieListState>(
+      builder: (context, state) {
+        if (state is MovieListInitial || state is MovieListLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is MovieListLoaded) {
+          final movies = state.movies;
+          
+          if (movies.isEmpty) {
+            return const Center(child: Text('No movies available.'));
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MovieDetail(
+                          initialMovie: movie,
+                        ),
+                      ),
+                    );
+                  },
+                  child: MovieCard(
+                    title: movie.title,
+                    overview: movie.overview,
+                    releaseDate: movie.releaseDate,
+                    rating: movie.rating,
+                    imageUrl: movie.imageUrl,
+                    isFavorite: movie.isFavorite,
+                    onFavoriteToggle: () {
+                      context.read<MovieListBloc>().add(ToogleFavoriteEvent(movie));
+                    },
                   ),
-                ),
-              );
-            },
-            child: MovieCard(
-              title: movie['title'].toString(),
-              overview: movie['overview'].toString(),
-              releaseDate: movie['releaseDate'].toString(),
-              rating: movie['rating'].toString(),
-              imageUrl: movie['imageUrl'].toString(),
-              isFavorite: movie['isFavorite'] as bool? ?? false,
-              onFavoriteToggle: () => toggleFavorite(index),
+                );
+              },
             ),
           );
-        },
-      ),
+        } else if (state is MovieListError) {
+          return Center(child: Text(state.errorMessage));
+        }
+        
+        return const SizedBox.shrink();
+      },
     );
   }
 }
