@@ -96,7 +96,30 @@ class _MovieListState extends State<MovieList> {
                   ),
                 );
               } else if (state is MovieListError) {
-                return Center(child: Text(state.errorMessage));
+                String errorMsg = state.errorMessage;
+                if (errorMsg.contains('SocketException') || errorMsg.contains('Failed host lookup')) {
+                  errorMsg = 'Tidak ada koneksi internet dan data pencarian ini belum tersedia secara offline.\nSilakan periksa jaringan Anda.';
+                } else {
+                  errorMsg = 'Terjadi kesalahan saat memuat data film.';
+                }
+
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.cloud_off, size: 64, color: Colors.grey),
+                        const SizedBox(height: 16),
+                        Text(
+                          errorMsg,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               }
               
               return const SizedBox.shrink();
