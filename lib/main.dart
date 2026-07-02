@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'ui/pages/home.dart';
 import 'bloc/movie_list_bloc.dart';
+import 'data/movie_repository.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final MovieRepository _movieRepository = MovieRepository();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MovieListBloc()..add(FetchMoviesEvent()),
+      create: (context) => MovieListBloc(movieRepository: _movieRepository)..add(FetchMoviesEvent()),
       child: MaterialApp(
         title: 'Movie App',
         theme: ThemeData(

@@ -1,5 +1,5 @@
 class MovieModel {
-  final int id;
+  final String id;
   final String title;
   final String overview;
   final String releaseDate;
@@ -18,14 +18,15 @@ class MovieModel {
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
+    // Map API fields if present, otherwise fallback to existing keys for backward compatibility / local mock data
     return MovieModel(
-      id: json['id'],
-      title: json['title'],
-      overview: json['overview'],
-      releaseDate: json['releaseDate'],
-      rating: json['rating'],
-      imageUrl: json['imageUrl'],
-      isFavorite: json['isFavorite'] ?? false,
+      id: json['#IMDB_ID'] ?? json['id']?.toString() ?? '',
+      title: json['#TITLE'] ?? json['title'] ?? 'Unknown Title',
+      overview: json['#ACTORS'] ?? json['overview'] ?? 'No actors provided',
+      releaseDate: json['#YEAR']?.toString() ?? json['releaseDate'] ?? 'Unknown Year',
+      rating: json['#RANK'] != null ? 'Rank: ${json['#RANK']}' : json['rating'] ?? 'N/A',
+      imageUrl: json['#IMG_POSTER'] ?? json['imageUrl'] ?? '',
+      isFavorite: json['isFavorite'] ?? json['is_favorite'] ?? false,
     );
   }
 
@@ -34,15 +35,15 @@ class MovieModel {
       'id': id,
       'title': title,
       'overview': overview,
-      'release_date': releaseDate,
+      'releaseDate': releaseDate,
       'rating': rating,
-      'image_url': imageUrl,
-      'is_favorite': isFavorite,
+      'imageUrl': imageUrl,
+      'isFavorite': isFavorite,
     };
   }
 
   MovieModel copyWith({
-    int? id,
+    String? id,
     String? title,
     String? overview,
     String? releaseDate,
