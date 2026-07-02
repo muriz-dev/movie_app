@@ -19,12 +19,12 @@ class MovieModel {
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
     return MovieModel(
-      id: json['#IMDB_ID']?.toString() ?? '',
-      title: json['#TITLE'] ?? 'Unknown Title',
-      overview: json['#ACTORS'] ?? 'No actors provided',
-      releaseDate: json['#YEAR']?.toString() ?? 'Unknown Year',
-      rating: json['#RANK'] != null ? 'Rank: ${json['#RANK']}' : 'N/A',
-      imageUrl: json['#IMG_POSTER'] ?? '',
+      id: json['#IMDB_ID']?.toString() ?? json['id']?.toString() ?? '',
+      title: json['#TITLE'] ?? json['title'] ?? 'Unknown Title',
+      overview: json['#ACTORS'] ?? json['overview'] ?? 'No actors provided',
+      releaseDate: json['#YEAR']?.toString() ?? json['releaseDate'] ?? 'Unknown Year',
+      rating: json['#RANK'] != null ? 'Rank: ${json['#RANK']}' : json['rating'] ?? 'N/A',
+      imageUrl: json['#IMG_POSTER'] ?? json['imageUrl'] ?? '',
       isFavorite: json['isFavorite'] ?? false,
     );
   }

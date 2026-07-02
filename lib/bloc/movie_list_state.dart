@@ -8,9 +8,10 @@ final class MovieListInitial extends MovieListState {}
 final class MovieListLoading extends MovieListState {}
 
 final class MovieListLoaded extends MovieListState {
-  final List<MovieModel> movies;
+  final List<MovieModel> searchMovies;
+  final List<MovieModel> favoriteMovies;
 
-  MovieListLoaded(this.movies);
+  MovieListLoaded(this.searchMovies, this.favoriteMovies);
 }
 
 final class MovieListError extends MovieListState {

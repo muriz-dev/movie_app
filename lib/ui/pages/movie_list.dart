@@ -57,7 +57,7 @@ class _MovieListState extends State<MovieList> {
               if (state is MovieListInitial || state is MovieListLoading) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is MovieListLoaded) {
-                final movies = state.movies;
+                final movies = state.searchMovies;
                 
                 if (movies.isEmpty) {
                   return const Center(child: Text('No movies available.'));

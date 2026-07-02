@@ -23,7 +23,8 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
     try {
       final query = event.query ?? 'avatar'; // Default query if none provided
       final movies = await movieRepository.searchMovies(query);
-      emit(MovieListLoaded(movies));
+      final favorites = await movieRepository.getFavoriteMovies();
+      emit(MovieListLoaded(movies, favorites));
     } catch (e) {
       emit(MovieListError('Failed to fetch movies: $e'));
     }
@@ -32,19 +33,25 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
   void onToogleFavorite(
     ToogleFavoriteEvent event,
     Emitter<MovieListState> emit,
-  ) {
+  ) async {
     if (state is MovieListLoaded) {
       final currentState = state as MovieListLoaded;
 
-      final updatedMovie = currentState.movies.map((movie) {
+      // 1. Persist the toggle
+      await movieRepository.toggleFavorite(event.movie);
+      
+      // 2. Fetch updated favorites from repository
+      final updatedFavorites = await movieRepository.getFavoriteMovies();
+
+      // 3. Update the search results to reflect the heart icon change immediately
+      final updatedSearchMovies = currentState.searchMovies.map((movie) {
         if (movie.id == event.movie.id) {
           return movie.copyWith(isFavorite: !movie.isFavorite);
         }
-
         return movie;
       }).toList();
 
-      emit(MovieListLoaded(updatedMovie));
+      emit(MovieListLoaded(updatedSearchMovies, updatedFavorites));
     }
   }
 }

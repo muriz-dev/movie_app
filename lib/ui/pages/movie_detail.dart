@@ -15,7 +15,9 @@ class MovieDetail extends StatelessWidget {
         MovieModel movie = initialMovie;
         if (state is MovieListLoaded) {
           try {
-            movie = state.movies.firstWhere((m) => m.id == initialMovie.id);
+            // First check search results, then check favorites if not found there
+            movie = state.searchMovies.firstWhere((m) => m.id == initialMovie.id, 
+                orElse: () => state.favoriteMovies.firstWhere((m) => m.id == initialMovie.id));
           } catch (_) {}
         }
 

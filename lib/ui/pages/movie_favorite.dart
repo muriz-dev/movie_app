@@ -14,7 +14,7 @@ class Favorite extends StatelessWidget {
         if (state is MovieListInitial || state is MovieListLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is MovieListLoaded) {
-          final favoriteMovies = state.movies.where((m) => m.isFavorite).toList();
+          final favoriteMovies = state.favoriteMovies;
           
           if (favoriteMovies.isEmpty) {
             return const Center(child: Text('No favorite movies yet.'));
